@@ -25,8 +25,22 @@ export default function DashboardPage() {
   const { speakText, language } = useVoice();
   const navigate = useNavigate();
 
-  const [songs, setSongs] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [songs, setSongs] = useState(() => {
+    try {
+      const cached = localStorage.getItem('aapan_cached_songs');
+      return cached ? JSON.parse(cached) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+  const [loading, setLoading] = useState(() => {
+    try {
+      const cached = localStorage.getItem('aapan_cached_songs');
+      return !(cached && JSON.parse(cached).length > 0);
+    } catch (e) {
+      return true;
+    }
+  });
 
   // Upload Music Modal State
   const [showUploadMusicModal, setShowUploadMusicModal] = useState(false);
@@ -43,13 +57,13 @@ export default function DashboardPage() {
   }, [token]);
 
   const loadAllUserData = async () => {
-    setLoading(true);
     try {
       const activeToken = token || localStorage.getItem('aapan_token');
       if (activeToken) {
         const songsRes = await api.getMySongs(activeToken);
         if (songsRes?.songs && songsRes.songs.length > 0) {
           setSongs(songsRes.songs);
+          localStorage.setItem('aapan_cached_songs', JSON.stringify(songsRes.songs));
         }
       }
     } catch (e) {
@@ -171,7 +185,11 @@ export default function DashboardPage() {
     if (!window.confirm('क्या आप वाकई इस अपलोड किए गए गाने को हटाना चाहते हैं?')) return;
     try {
       await api.deleteMySong(token, id);
-      setSongs(prev => prev.filter(s => (s._id || s.id) !== id));
+      setSongs(prev => {
+        const updated = prev.filter(s => (s._id || s.id) !== id);
+        localStorage.setItem('aapan_cached_songs', JSON.stringify(updated));
+        return updated;
+      });
       speakText('गाना हटा दिया गया है।', language);
     } catch (err) {
       alert('गाना हटाने में समस्या आई: ' + err.message);

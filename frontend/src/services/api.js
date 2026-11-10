@@ -15,10 +15,30 @@ export const getFullMediaUrl = (url) => {
   return `${BACKEND_URL}${cleanPath}`;
 };
 
+// Smart fetch wrapper that detects cold starts and notifies UI
+export const fetchWithWarmup = async (url, options = {}) => {
+  let timer = null;
+  if (typeof window !== 'undefined') {
+    timer = setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('aapan-server-warming', { detail: { warming: true } }));
+    }, 2000);
+  }
+
+  try {
+    const res = await fetch(url, options);
+    return res;
+  } finally {
+    if (timer) clearTimeout(timer);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('aapan-server-warming', { detail: { warming: false } }));
+    }
+  }
+};
+
 export const api = {
   // Auth
   async login(email, password) {
-    const res = await fetch(`${API_BASE}/auth/login`, {
+    const res = await fetchWithWarmup(`${API_BASE}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
@@ -29,7 +49,7 @@ export const api = {
   },
 
   async register(userData) {
-    const res = await fetch(`${API_BASE}/auth/register`, {
+    const res = await fetchWithWarmup(`${API_BASE}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData)
@@ -40,7 +60,7 @@ export const api = {
   },
 
   async getMe(token) {
-    const res = await fetch(`${API_BASE}/auth/me`, {
+    const res = await fetchWithWarmup(`${API_BASE}/auth/me`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     if (!res.ok) throw new Error('Failed to fetch user');
@@ -48,7 +68,7 @@ export const api = {
   },
 
   async updatePreferences(token, prefs) {
-    const res = await fetch(`${API_BASE}/auth/preferences`, {
+    const res = await fetchWithWarmup(`${API_BASE}/auth/preferences`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -61,7 +81,7 @@ export const api = {
 
   // Lyrics & User Music Stored in Database
   async getMySongs(token) {
-    const res = await fetch(`${API_BASE}/lyrics/my-songs`, {
+    const res = await fetchWithWarmup(`${API_BASE}/lyrics/my-songs`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     if (!res.ok) throw new Error('Failed to fetch your songs');
@@ -69,7 +89,7 @@ export const api = {
   },
 
   async deleteMySong(token, id) {
-    const res = await fetch(`${API_BASE}/lyrics/my-songs/${id}`, {
+    const res = await fetchWithWarmup(`${API_BASE}/lyrics/my-songs/${id}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -82,7 +102,7 @@ export const api = {
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
-    const res = await fetch(`${API_BASE}/lyrics/extract`, {
+    const res = await fetchWithWarmup(`${API_BASE}/lyrics/extract`, {
       method: 'POST',
       headers,
       body: JSON.stringify(payload)
@@ -97,7 +117,7 @@ export const api = {
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
-    const res = await fetch(`${API_BASE}/lyrics/from-youtube`, {
+    const res = await fetchWithWarmup(`${API_BASE}/lyrics/from-youtube`, {
       method: 'POST',
       headers,
       body: JSON.stringify(payload)
@@ -112,7 +132,7 @@ export const api = {
   // Voice Q&A & Gnani Cloud API (Blazing Fast Sub-50ms Response)
   async askVoice(documentId, query, language, synthesizeAudio = false) {
     try {
-      const res = await fetch(`${API_BASE}/voice/ask`, {
+      const res = await fetchWithWarmup(`${API_BASE}/voice/ask`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ documentId, query, language, synthesizeAudio })
@@ -135,7 +155,7 @@ export const api = {
 
   // Gnani Timbre Neural Cloud TTS
   async synthesizeTTS(text, language = 'hi-IN', voice = 'Nalini') {
-    const res = await fetch(`${API_BASE}/voice/tts`, {
+    const res = await fetchWithWarmup(`${API_BASE}/voice/tts`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text, language, voice })
@@ -146,7 +166,7 @@ export const api = {
 
   // Gnani Connection Status
   async getVoiceStatus() {
-    const res = await fetch(`${API_BASE}/voice/status`);
+    const res = await fetchWithWarmup(`${API_BASE}/voice/status`);
     if (!res.ok) throw new Error('Failed to fetch voice status');
     return res.json();
   }

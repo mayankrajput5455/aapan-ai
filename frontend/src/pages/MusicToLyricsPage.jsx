@@ -69,8 +69,15 @@ export default function MusicToLyricsPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // User uploaded songs and active song state (defaults to null so no unwanted music auto-plays)
-  const [userSongs, setUserSongs] = useState([]);
+  // User uploaded songs and active song state (defaults to cached songs for 0ms initial load)
+  const [userSongs, setUserSongs] = useState(() => {
+    try {
+      const cached = localStorage.getItem('aapan_cached_songs');
+      return cached ? JSON.parse(cached) : [];
+    } catch (e) {
+      return [];
+    }
+  });
   const [selectedSong, setSelectedSong] = useState(() => {
     if (location.state?.selectedSong) {
       return location.state.selectedSong;
@@ -295,8 +302,9 @@ export default function MusicToLyricsPage() {
     if (token) {
       api.getMySongs(token)
         .then((data) => {
-          if (data.success && data.songs?.length > 0) {
+          if (data.success && data.songs) {
             setUserSongs(data.songs);
+            localStorage.setItem('aapan_cached_songs', JSON.stringify(data.songs));
             if (location.state?.selectedSongId) {
               const matched = data.songs.find((s) => (s._id || s.id) === location.state.selectedSongId);
               if (matched) {
@@ -315,7 +323,11 @@ export default function MusicToLyricsPage() {
     if (!window.confirm('क्या आप इस गाने को अपने खाते से हटाना चाहते हैं?')) return;
     try {
       await api.deleteMySong(token, songId);
-      setUserSongs((prev) => prev.filter((s) => (s._id || s.id) !== songId));
+      setUserSongs((prev) => {
+        const updated = prev.filter((s) => (s._id || s.id) !== songId);
+        localStorage.setItem('aapan_cached_songs', JSON.stringify(updated));
+        return updated;
+      });
       if ((selectedSong?._id || selectedSong?.id) === songId) {
         setSelectedSong(null);
       }

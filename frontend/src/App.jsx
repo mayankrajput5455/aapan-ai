@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { VoiceProvider, useVoice } from './context/VoiceContext';
@@ -13,6 +13,7 @@ import SignupPage from './pages/SignupPage';
 import DashboardPage from './pages/DashboardPage';
 import MusicToLyricsPage from './pages/MusicToLyricsPage';
 import musicStageBg from './assets/music-stage-bg.jpg';
+import { BACKEND_URL } from './services/api';
 
 // Protected Route Guard: Redirects to /login if user is not authenticated
 function ProtectedRoute({ children, message = 'कृपया इस सुविधा का उपयोग करने के लिए पहले लॉगिन करें।' }) {
@@ -98,6 +99,23 @@ function HotkeyListener({ children }) {
 }
 
 export default function App() {
+  const [isServerWarming, setIsServerWarming] = useState(false);
+
+  useEffect(() => {
+    // Proactive background ping to wake up Render free tier container immediately on visit
+    try {
+      fetch(`${BACKEND_URL}/api/health`, { mode: 'cors' }).catch(() => {});
+    } catch (e) {}
+
+    // Listen for slow API requests indicating a Render cold start
+    const handleWarming = (e) => {
+      setIsServerWarming(Boolean(e.detail?.warming));
+    };
+
+    window.addEventListener('aapan-server-warming', handleWarming);
+    return () => window.removeEventListener('aapan-server-warming', handleWarming);
+  }, []);
+
   return (
     <Router>
       <AuthProvider>
@@ -115,6 +133,14 @@ export default function App() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-black/60"></div>
                   <div className="absolute inset-0 bg-radial-at-c from-rose-500/10 via-transparent to-black/80"></div>
                 </div>
+
+                {/* Render Free Tier Wakeup Notification Banner */}
+                {isServerWarming && (
+                  <div className="bg-amber-500/20 border-b border-amber-500/40 text-amber-300 text-xs py-2 px-4 text-center font-bold flex items-center justify-center gap-2 backdrop-blur-md animate-pulse z-50 sticky top-0">
+                    <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+                    <span>⚡ सर्वर एक्टिवेट हो रहा है... कृपया 10-15 सेकंड प्रतीक्षा करें (Cloud server waking up from sleep...)</span>
+                  </div>
+                )}
 
                 <Sidebar />
                 <Navbar />

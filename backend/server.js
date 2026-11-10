@@ -38,12 +38,12 @@ app.get('/api/health', (req, res) => {
 
 const PORT = process.env.PORT || 5050;
 
-const startServer = async () => {
-  await connectDB();
+const startServer = () => {
   app.listen(PORT, () => {
     console.log(`[Server] Aapan AI API server running on port ${PORT}`);
     console.log(`[Server] Health check available at http://localhost:${PORT}/api/health`);
   });
+  connectDB().catch((err) => console.warn('[Database] Connect notice:', err.message));
 };
 
 startServer();
