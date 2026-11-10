@@ -7,14 +7,17 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': {
-        target: 'http://localhost:5050',
-        changeOrigin: true
+        target: process.env.VITE_BACKEND_URL || 'https://aapan-ai.onrender.com',
+        changeOrigin: true,
+        secure: false
       },
       '/uploads': {
-        target: 'http://localhost:5050',
-        changeOrigin: true
+        target: process.env.VITE_BACKEND_URL || 'https://aapan-ai.onrender.com',
+        changeOrigin: true,
+        secure: false
       }
     }
   }
 });
+
 

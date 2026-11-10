@@ -1,4 +1,19 @@
-const API_BASE = '/api';
+export const BACKEND_URL = (
+  import.meta.env.VITE_BACKEND_URL ||
+  import.meta.env.VITE_API_URL?.replace(/\/api\/?$/, '') ||
+  'https://aapan-ai.onrender.com'
+).replace(/\/+$/, '');
+
+export const API_BASE = `${BACKEND_URL}/api`;
+
+export const getFullMediaUrl = (url) => {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('blob:') || url.startsWith('data:')) {
+    return url;
+  }
+  const cleanPath = url.startsWith('/') ? url : `/${url}`;
+  return `${BACKEND_URL}${cleanPath}`;
+};
 
 export const api = {
   // Auth

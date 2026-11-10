@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useVoice } from '../context/VoiceContext';
-import { api } from '../services/api';
+import { api, API_BASE, getFullMediaUrl } from '../services/api';
 import { resolveYouTubeLyrics, ensureFullSongCoverage, generateFullSongLyrics } from '../utils/youtubeLyricsExtractor';
 import {
   convertGurmukhiToHindi,
@@ -566,7 +566,7 @@ export default function MusicToLyricsPage() {
       audioElementRef.current.pause();
       audioElementRef.current.currentTime = 0;
       if (song.audioUrl && !song.youtubeId) {
-        audioElementRef.current.src = song.audioUrl;
+        audioElementRef.current.src = getFullMediaUrl(song.audioUrl);
       } else {
         audioElementRef.current.removeAttribute('src');
       }
@@ -818,7 +818,7 @@ export default function MusicToLyricsPage() {
           uploadHeaders['Authorization'] = `Bearer ${token}`;
         }
 
-        fetch('/api/lyrics/extract', {
+        fetch(`${API_BASE}/lyrics/extract`, {
           method: 'POST',
           headers: uploadHeaders,
           body: JSON.stringify({
@@ -914,7 +914,7 @@ export default function MusicToLyricsPage() {
       pasteHeaders['Authorization'] = `Bearer ${token}`;
     }
 
-    fetch('/api/lyrics/extract', {
+    fetch(`${API_BASE}/lyrics/extract`, {
       method: 'POST',
       headers: pasteHeaders,
       body: JSON.stringify({
@@ -1009,7 +1009,7 @@ export default function MusicToLyricsPage() {
       <audio
         ref={audioElementRef}
         muted={isMuted}
-        src={selectedSong?.youtubeId ? undefined : (selectedSong?.audioUrl || undefined)}
+        src={selectedSong?.youtubeId ? undefined : (getFullMediaUrl(selectedSong?.audioUrl) || undefined)}
         preload="auto"
         onTimeUpdate={(e) => {
           if (!isNaN(e.currentTarget.currentTime)) {

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useVoice } from '../context/VoiceContext';
-import { api } from '../services/api';
+import { api, API_BASE } from '../services/api';
 import { sampleSongs } from '../utils/sampleSongs';
 import {
   Music,
@@ -105,7 +105,7 @@ export default function DashboardPage() {
         setMusicProcessingStatus('Gnani Prisma ASR से बोल निकाले जा रहे हैं...');
 
         try {
-          const res = await fetch('/api/lyrics/extract', {
+          const res = await fetch(`${API_BASE}/lyrics/extract`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -138,7 +138,7 @@ export default function DashboardPage() {
       reader.readAsDataURL(musicFile);
     } else if (musicPastedLyrics.trim()) {
       try {
-        const res = await fetch('/api/lyrics/extract', {
+        const res = await fetch(`${API_BASE}/lyrics/extract`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
