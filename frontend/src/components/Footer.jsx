@@ -17,7 +17,11 @@ import {
   CheckCircle2,
   Cpu,
   Layers,
-  FileText
+  FileText,
+  Phone,
+  Mail,
+  Linkedin,
+  Github
 } from 'lucide-react';
 
 export default function Footer() {
@@ -67,7 +71,7 @@ export default function Footer() {
 
       {/* 2. Main Multi-Column Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8 sm:gap-10">
           
           {/* Brand & Vision (Spans 2 columns on lg screens) */}
           <div className="lg:col-span-2 space-y-4">
@@ -236,6 +240,73 @@ export default function Footer() {
             </ul>
           </div>
 
+          {/* Column 5: Contact Us */}
+          <div className="space-y-3">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-2">
+              <Phone className="w-3.5 h-3.5 text-amber-400" />
+              <span>Contact Us</span>
+            </h4>
+            <p className="text-[11px] text-stone-400 leading-relaxed">
+              Get in touch for developer support, collaborations, or inquiries.
+            </p>
+            <ul className="space-y-2.5 text-xs">
+              <li>
+                <a
+                  href="tel:+918318915349"
+                  className="text-stone-300 hover:text-amber-400 transition-colors flex items-center gap-2 group"
+                >
+                  <div className="w-6 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:border-amber-400/40">
+                    <Phone className="w-3 h-3 text-amber-400" />
+                  </div>
+                  <span className="font-mono text-[11px]">+91 8318915349</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="mailto:mayankrajput5455@gmail.com"
+                  className="text-stone-300 hover:text-amber-400 transition-colors flex items-center gap-2 group"
+                >
+                  <div className="w-6 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:border-amber-400/40">
+                    <Mail className="w-3 h-3 text-rose-400" />
+                  </div>
+                  <span className="truncate text-[11px]">mayankrajput5455@gmail.com</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.linkedin.com/in/mayank5455"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-stone-300 hover:text-amber-400 transition-colors flex items-center gap-2 group"
+                >
+                  <div className="w-6 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:border-amber-400/40">
+                    <Linkedin className="w-3 h-3 text-blue-400" />
+                  </div>
+                  <span className="text-[11px] flex items-center gap-1">
+                    <span>LinkedIn</span>
+                    <ExternalLink className="w-2.5 h-2.5 opacity-50" />
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://github.com/mayankrajput5455"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-stone-300 hover:text-amber-400 transition-colors flex items-center gap-2 group"
+                >
+                  <div className="w-6 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:border-amber-400/40">
+                    <Github className="w-3 h-3 text-purple-400" />
+                  </div>
+                  <span className="text-[11px] flex items-center gap-1">
+                    <span>GitHub</span>
+                    <ExternalLink className="w-2.5 h-2.5 opacity-50" />
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
         </div>
       </div>
 
@@ -258,10 +329,39 @@ export default function Footer() {
             <span className="text-amber-400 font-semibold">Gnani.ai Inside</span>
           </div>
 
-          <div className="flex items-center gap-4 text-[11px] text-stone-400">
-            <span className="hover:text-stone-200 transition-colors cursor-pointer">Privacy Policy</span>
-            <span className="hover:text-stone-200 transition-colors cursor-pointer">Terms of Service</span>
-            <span className="hover:text-stone-200 transition-colors cursor-pointer">Security Vault</span>
+          <div className="flex items-center gap-3">
+            <a
+              href="tel:+918318915349"
+              title="Call +91 8318915349"
+              className="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 text-stone-300 hover:text-amber-400 transition-all"
+            >
+              <Phone className="w-3.5 h-3.5" />
+            </a>
+            <a
+              href="mailto:mayankrajput5455@gmail.com"
+              title="Email mayankrajput5455@gmail.com"
+              className="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 text-stone-300 hover:text-rose-400 transition-all"
+            >
+              <Mail className="w-3.5 h-3.5" />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/mayank5455"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="LinkedIn Profile"
+              className="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 text-stone-300 hover:text-blue-400 transition-all"
+            >
+              <Linkedin className="w-3.5 h-3.5" />
+            </a>
+            <a
+              href="https://github.com/mayankrajput5455"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="GitHub Profile"
+              className="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 text-stone-300 hover:text-purple-400 transition-all"
+            >
+              <Github className="w-3.5 h-3.5" />
+            </a>
           </div>
 
         </div>

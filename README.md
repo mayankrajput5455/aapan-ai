@@ -186,6 +186,16 @@ npm run dev
 
 ---
 
+## 📬 Contact & Developer Info
+
+- **Developer**: Mayank Rajput
+- **Phone**: [+91 8318915349](tel:+918318915349)
+- **Email**: [mayankrajput5455@gmail.com](mailto:mayankrajput5455@gmail.com)
+- **LinkedIn**: [linkedin.com/in/mayank5455](https://www.linkedin.com/in/mayank5455)
+- **GitHub**: [github.com/mayankrajput5455](https://github.com/mayankrajput5455)
+
+---
+
 ## 🛡️ License
 
 Distributed under the **MIT License**. See `LICENSE` for more information.

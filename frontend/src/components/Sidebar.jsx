@@ -15,7 +15,11 @@ import {
   Globe,
   Gauge,
   ChevronRight,
-  ExternalLink
+  ExternalLink,
+  Phone,
+  Mail,
+  Linkedin,
+  Github
 } from 'lucide-react';
 
 export default function Sidebar() {
@@ -284,6 +288,49 @@ export default function Sidebar() {
             </div>
           </div>
 
+        </div>
+
+        {/* Contact Developer & Support Strip */}
+        <div className="p-4 border-t border-white/10 bg-black/30 space-y-2">
+          <span className="text-[10px] font-bold text-white/40 uppercase tracking-wider block">
+            {language === 'hi' ? 'संपर्क एवं सहायता' : 'Contact Developer'}
+          </span>
+          <div className="flex items-center gap-2">
+            <a
+              href="tel:+918318915349"
+              className="flex-1 py-1.5 px-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-stone-300 hover:text-amber-400 text-[11px] font-medium flex items-center justify-center gap-1.5 transition-colors"
+              title="Call +91 8318915349"
+            >
+              <Phone className="w-3 h-3 text-amber-400" />
+              <span>Call</span>
+            </a>
+            <a
+              href="mailto:mayankrajput5455@gmail.com"
+              className="flex-1 py-1.5 px-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-stone-300 hover:text-rose-400 text-[11px] font-medium flex items-center justify-center gap-1.5 transition-colors"
+              title="Email mayankrajput5455@gmail.com"
+            >
+              <Mail className="w-3 h-3 text-rose-400" />
+              <span>Email</span>
+            </a>
+            <a
+              href="https://www.linkedin.com/in/mayank5455"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-stone-300 hover:text-blue-400 transition-colors"
+              title="LinkedIn Profile"
+            >
+              <Linkedin className="w-3.5 h-3.5 text-blue-400" />
+            </a>
+            <a
+              href="https://github.com/mayankrajput5455"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-stone-300 hover:text-purple-400 transition-colors"
+              title="GitHub Profile"
+            >
+              <Github className="w-3.5 h-3.5 text-purple-400" />
+            </a>
+          </div>
         </div>
 
         {/* BOTTOM SECTION: Dedicated Logout Action & Footer Info */}
